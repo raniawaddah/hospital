@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hospital_person_form_view" model="ir.ui.view">
+            <field name="name">hospital_person_form_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="print_some_thing" type="object"
+                                string="Print"
+                                class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="photo" widget="image" class="oe_avatar"/>
+                                <field name="name"/>
+                                <field name="id_person"/>
+                                <field name="phone"/>
+                            </group>
+                            <group>
+                                <field name="date_of_birth"/>
+                                <field name="children_number"/>
+                                <field name="married"/>
+                                <field name="user_ids" widget="many2many_tags"/>
+                                <field name="gender_type"/>
+                                <field name="person_position"/>
+                            </group>
+                            <field name="notes"/>
+                        </group>
+                        <notebook>
+                            <page string ="Doctor Reservations" attrs="{'invisible': [('person_position','=','patient')]}">
+                                <field name="doctor_reservation_ids" readonly="True">
+                                    <tree>
+                                        <field name="patient_name"/>
+                                        <field name="reservation_date"/>
+                                        <field name="reservation_price"/>
+                                        <field name="total"/>
+
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page string ="Patient Reservations" attrs="{'invisible': [('person_position','=','doctor')]}">
+                                <field name="patient_reservation_ids" readonly="True">
+                                    <tree>
+                                        <field name="doctor_name"/>
+                                        <field name="reservation_date"/>
+                                        <field name="reservation_price"/>
+                                        <field name="total"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hospital_person_tree_view" model="ir.ui.view">
+            <field name="name">hospital_person_form_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="id_person"/>
+                    <field name="date_of_birth"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hospital_person_kanban_view" model="ir.ui.view">
+            <field name="name">hospital_person_kanban_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <field name="name"/>
+                    <field name="date_of_birth"/>
+                    <field name="person_position"/>
+                    <field name="children_number"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb16">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title">
+                                            <span style="color:red;"><t t-esc="record.name.value"/></span>
+                                        </strong>
+                                    </div>
+                                    <strong>
+                                        <span><t t-esc="record.children_number.value"/></span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left text-muted">
+                                    <span><t t-esc="record.date_of_birth.value"/></span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="person_position" widget="label_selection" />
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="hospital_person_calendar_view" model="ir.ui.view">
+            <field name="name">hospital_person_calendar_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <calendar string="Persons Calendar" date_start="date_of_birth" color="person_position">
+                    <field name="name"/>
+                    <field name="id_person" avatar_field="avatar_128"/>
+                    <field name="children_number"/>
+                </calendar>
+            </field>
+        </record>
+        <record id="hospital_person_graph_view" model="ir.ui.view">
+            <field name="name">hospital_person_graph_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <graph string="Persons Graph" sample="1">
+                    <field name="name"/>
+                    <field name="children_number" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record id="hospital_person_pivot_view" model="ir.ui.view">
+            <field name="name">hospital_person_pivot_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <pivot string="Persons Pivot" sample="1">
+                    <field name="person_position" type="row"/>
+                    <field name="children_number" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hospital_person_search_view" model="ir.ui.view">
+            <field name="name">hospital_person_search_view</field>
+            <field name="model">hospital.person</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="id_person"/>
+                    <field name="phone"/>
+                    <field name="date_of_birth"/>
+                    <filter name="doctor_position" string="Doctor" domain=" [('person_position','=','doctor')]"/>
+                    <filter name="patient_position" string="Patient" domain=" [('person_position','=','patient')]"/>
+                    <filter name="married" string="Married" domain=" [('married','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Married" name="married" domain="[]" context="{'group_by':'married'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hospital_persons_action" model="ir.actions.act_window">
+            <field name="name">Hospital Persons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.person</field>
+            <field name="view_mode">tree,kanban,calendar,graph,pivot,form</field>
+        </record>
+
+        <menuitem id="hospital_person_menu_root" name="Hospital System" web_icon="hospital,static/description/icon.png"/>
+        <menuitem id="hospital_person_menu_root_2" name="Hospital System" parent="hospital.hospital_person_menu_root"/>
+        <menuitem id="hospital_person_menu_child"
+                  name="Persons"
+                  parent="hospital.hospital_person_menu_root_2"
+                  action="hospital_persons_action"/>
+        <menuitem id="hospital_person_menu_child2"
+                  name="Persons2"
+                  parent="hospital.hospital_person_menu_root_2"
+                  action="hospital_persons_action"/>
+        <menuitem id="hospital_person_menu_root_2" name="Hospital System" parent="hospital.hospital_person_menu_root"/>
+
+    </data>
+</odoo>

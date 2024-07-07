@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="hospital_person_report"
+                string="Person Details"
+                model="hospital.person"
+                report_type="qweb-pdf"
+                file="hospital.person_report_template"
+                name="hospital.person_report_template"
+        />
+
+        <template id="person_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div align="center">
+                            <h2 style="background-color:#55005f; background-size: 150px;width: 400px; height: 80px;display:inline-block;border-radius: 25px; opacity:0.3;">
+                                <span style="position:relative; top: 20px;color:white;">Person Details Report</span>
+                            </h2>
+                        </div>
+
+                        <div class="page">
+                            <table border="1" class="table table-condensed" style="border:3px black dotted; text-align:center;">
+                                <tr >
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Person Name</th>
+                                    <th style="border: 1px dashed black; color:black;" class="thead-light" t-field="doc.name"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Phone Number</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.phone"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Date of Birth</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.date_of_birth"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">ID</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.id_person"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Children Number</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.children_number"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Gender Type</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.gender_type"/>
+                                </tr>
+                                <tr>
+                                    <th style="background-color:#a77a9b;border: 1px solid black;color:white;" class="thead-light">Person Position</th>
+                                    <th style="border: 1px solid black;color:black;" class="thead-light" t-field="doc.person_position"/>
+                                </tr>
+                            </table>
+                            <br/>
+<!--                            <p style="color:black;text-align:center;font-size:30px; opacity: 0.6; background-color:#a76b3a; background-size:auto; width: 400px; height: 80px; display:inline-block; top: 20px;">Reservation Details</p>-->
+<!--                            <p style="background-color:#55005f; background-size: 150px;width: 400px; height: 80px;display:inline-block;border-radius: 25px; opacity:0.3; position:relative; top: 20px;color:white;">Reservation Details</p>-->
+<!--                            <p style="color:white;text-align:center;font-size:30px; background-color:#a87b11; background-size: 150px;width: 400px; height: 80px;display:inline-block;border-radius: 25px; position:relative; top: 20px;">Reservation Details</p>-->
+<!--                            <h1 style="background-color:#55005f; background-size: 150px;width: 400px; height: 80px;display:inline-block;border-radius: 25px; opacity:0.3;">-->
+<!--                                    <span style="position:relative; top: 20px;color:white;">Person Details Report</span>-->
+                            <div align="center">
+                            <h2 style="background-color:#a76b3a; background-size: 150px;width: 400px; height: 80px;display:inline-block;border-radius: 25px; opacity:0.3;">
+                                <span style="position:relative; top: 20px;color:white;">Person Details Report</span>
+                            </h2>
+                        </div>
+<!--                            @###############-->
+                            <table border="1" class="table table-condensed" style="background-color: lightblue;border-style:solid; text-align:center;" width="100%">
+                                <t t-set="counter" t-value="1"/>
+                                <t t-set="total" t-value="0"/>
+                                <t  t-foreach="doc.doctor_reservation_ids" t-as="line">
+<!--&lt;!&ndash;                                    <t t-if="line.type_check =='dental'">&ndash;&gt;-->
+                                        <tr style="text-align:center;">
+                                            <td t-esc="counter" style="width:10%;border: 1px solid black" class="thead-light"/>
+<!--                                            <td t-esc="line.patient_name" style="width:30%;border: 1px solid black" class="thead-light"/>-->
+                                            <td t-esc="line.patient_name.name" style="width:20%;border: 1px solid black" class="thead-light"/>
+                                            <td t-esc="line.reservation_date" style="width:30%;border: 1px solid black" class="thead-light"/>
+                                            <td t-esc="line.reservation_price" style="width:30%;border: 1px solid black" class="thead-light"/>
+<!--                                        </tr>-->
+                                        <t t-set="counter" t-value="counter+1"/>
+<!--                                        <t t-set="total" t-value="line.patient_name.reservation_price+total"/>-->
+                                        </tr>
+<!--                                </t>-->
+
+                                </t>
+
+
+                            </table>
+
+<!--                ##############################-->
+                            <br></br>
+                            <span>Total : </span><span t-esc="total"/>
+
+                            <!--                                    <tr t-foreach="docs.get_onhand_products(loc)" t-as="track">-->
+                            <!--                                        <td t-esc="track['code'] or ''" style="border: 1px solid black" class="thead-light"/>-->
+                            <!--                                        <td t-esc="track['product'] or ''" style="border: 1px solid black" class="thead-light"/>-->
+                            <!--                                        <td t-esc="track['qty'] or '0.0'" style="border: 1px solid black" class="thead-light"/>-->
+                            <!--                                        <td t-esc="track['cost'] or '0.0'" style="border: 1px solid black" class="thead-light"/>-->
+                            <!--                                        <td t-esc="track['total'] or '0.0'" style="border: 1px solid black" class="thead-light"/>-->
+                            <!--                                        <t t-set="net" t-value="net + track['qty'] "/>-->
+                            <!--                                    </tr>-->
+                            <!--                                </tr>-->
+                            <!--                            </table>-->
+                            <!--                            <br/>-->
+                            <!--                            <div align="center">-->
+                            <!--                                <h3>Qty Total :  <span t-esc="net"/></h3>-->
+                            <!--                            </div>-->
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+
+
+
+    </data>
+</odoo>

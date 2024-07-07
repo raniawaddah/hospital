@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hospital_reservation_form_view" model="ir.ui.view">
+            <field name="name">hospital_reservation_form_view</field>
+            <field name="model">hospital.reservation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                         <button name="send_to_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                         <button name="send_to_doctor" string="Send To Doctor" type="object" class="oe_highlight" states="confirm"/>
+                         <button name="send_to_patient" string="Send To Patient" type="object" class="oe_highlight" states="confirm"/>
+                         <button name="send_to_done" string="Done" type="object" class="oe_highlight"
+                                 states="send_to_doctor,send_to_patient"/>
+                         <button name="send_to_cancel" string="Cancel" type="object" class="oe_highlight"
+                                 states="draft,confirm,send_to_doctor,send_to_patient"/>
+                         <button name="send_to_draft" string="Return To Draft" type="object" class="oe_highlight" states="cancel"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,send_to_doctor,done,cancel,send_to_patient"/>
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="doctor_name"  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="responsible" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="email"/>
+                                <field name="patient_name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="reservation_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="reservation_price" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="reservation_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="total" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="check_type" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+
+                            </group>
+
+                        </group>
+                        <field name="notes"/>
+<!--                        <notebook>-->
+<!--                            <page string ="Doctor Reservations">-->
+<!--                                <field name="doctor_reservation_ids">-->
+<!--                                    <tree editable="top">-->
+<!--&lt;!&ndash;                                        <field name="patient_id"/>&ndash;&gt;-->
+<!--                                        <field name="date_of_reservation"/>-->
+<!--                                        <field name="check"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+<!--                            </page>-->
+
+<!--                        </notebook>-->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hospital_reservation_tree_view" model="ir.ui.view">
+            <field name="name">hospital_reservation_form_view</field>
+            <field name="model">hospital.reservation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="doctor_name"/>
+                    <field name="patient_name"/>
+                    <field name="responsible"/>
+                    <field name="reservation_date"/>
+                    <field name="reservation_price" sum="Total Reservation"/>
+                    <field name="reservation_number"/>
+                    <field name="total"/>
+                    <field name="currency_id" invisible="1"/>
+<!--                    <field name="price_subtotal" sum="Total Reservation" />-->
+<!--                    <field name = "amount_total" sum = "Total Tax Included" widget = "monetary" decoration-bf = "1" optional = "show"/>-->
+                    <field name="check_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hospital_reservation_search_view" model="ir.ui.view">
+            <field name="name">hospital_reservation_search_view</field>
+            <field name="model">hospital.reservation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="doctor_name"/>
+                    <field name="patient_name"/>
+                    <field name="responsible"/>
+                    <field name="reservation_date"/>
+                    <field name="reservation_price"/>
+                    <filter name="children_check" string="Children" domain=" [('check_type','=','doctor')]"/>
+                    <filter name="dental_check" string="Dental" domain=" [('check_type','=','dental')]"/>
+                    <filter name="ent_check" string="Ent" domain=" [('check_type','=','ent')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Doctor_name" name="doctor_name" domain="[]" context="{'group_by':'doctor_name'}"/>
+                        <filter string="Patient_name" name="patient_name" domain="[]" context="{'group_by':'patient_name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hospital_reservations_action" model="ir.actions.act_window">
+            <field name="name">Hospital reservations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hospital.reservation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hospital_reservation_menu_child"
+                  name="Reservation"
+                  parent="hospital.hospital_person_menu_root"
+                  action="hospital_reservations_action"/>
+
+    </data>
+</odoo>
